@@ -1,0 +1,398 @@
+Index: src/Source.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.Scanner;\r\nimport java.util.Vector;\r\nimport java.io.*;\r\n\r\n/**\r\n Todo:\r\n    1) Add 2nd Address line field to contact and update loadPhoneBook to account for this\r\n    2) implement basic lookup function based on linear search for each field\r\n    3) implement file updating\r\n        b) implement insert/delete element functions\r\n    4) Implement outer-loop for loading/generating phonebooks in program\r\n    OPTIONAL:\r\n    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient search\r\n    6) implement multithreading to loadPhoneBook method\r\n\r\n **/\r\n\r\n\r\npublic class Source {\r\n    //reads individual characters from a FileReader until it finds the newline character or the end of the file\r\n    public static String getLine(FileReader in) {\r\n        String line = \"\";\r\n        char ch;\r\n        try {\r\n            ch = (char) in.read();\r\n            while (ch != '\\n' && in.ready()) {\r\n                line += ch;\r\n                ch = (char) in.read();\r\n                //System.out.println(name.ready());\r\n            }\r\n            return line;\r\n        }\r\n        catch (java.io.IOException e) {\r\n            System.out.println(\"File Reader IO Exception\");\r\n            return \"\";\r\n        }\r\n    }\r\n    public static void generatePhoneBook(String namesFile, String addressFile, String numbersFile, String outputFileName) {\r\n        try {\r\n            System.out.println(\"Importing names: \" + namesFile);\r\n            FileReader name = new FileReader(namesFile);\r\n            System.out.println(\"Importing addresses: \" + addressFile);\r\n            FileReader address = new FileReader(addressFile);\r\n            System.out.println(\"Importing numbers: \" + numbersFile);\r\n            FileReader number = new FileReader(numbersFile);\r\n            System.out.println(\"Generating output file: \" + outputFileName);\r\n            FileWriter phoneBook = new FileWriter(outputFileName);\r\n\r\n            char currentChar = (char)-1;\r\n            String line;\r\n            int i = 0;\r\n\r\n            while (name.ready() && address.ready() && number.ready()) {\r\n                //System.out.println((name.ready() && address.ready() && number.ready()));\r\n                System.out.println(\"Contact: \" + i++);\r\n                //read next name\r\n                line = getLine(name);\r\n                phoneBook.write(line + \"\\n\");\r\n                System.out.println(line);\r\n\r\n                //read next address\r\n\r\n                line = getLine(address);\r\n                phoneBook.write(line + \"\\n\");\r\n                System.out.println(line);\r\n\r\n                //read next second address line\r\n                    line = getLine(address);\r\n                phoneBook.write(line + \"\\n\");\r\n                System.out.println(line);\r\n\r\n\r\n                //read next phone number\r\n                line = getLine(number);\r\n                phoneBook.write(line + \"\\n\");\r\n                System.out.println(line);\r\n            }\r\n\r\n            name.close();\r\n            address.close();\r\n            number.close();\r\n            phoneBook.close();\r\n        }\r\n        catch (java.io.FileNotFoundException e) {\r\n            System.out.println(\"One or more files do not exist\");\r\n            return;\r\n        }\r\n        catch (java.io.IOException e) {\r\n            System.out.println(\"Output file could not be generated, check to make sure it does not already exist\");\r\n        }\r\n    }\r\n\r\n    public static Vector<contact> loadPhoneBook(String importFileName) {\r\n        try {\r\n            FileReader importFile = new FileReader(importFileName);\r\n            String entryNumber = getLine(importFile);\r\n            System.out.println(entryNumber);\r\n            Vector<contact> phoneBook = new Vector(Integer.parseInt(entryNumber.trim()));\r\n\r\n            while(importFile.ready()) {\r\n                phoneBook.add(new contact(getLine(importFile), (getLine(importFile)+getLine(importFile)), getLine(importFile)));\r\n            }\r\n            return phoneBook;\r\n        }\r\n        catch (java.io.FileNotFoundException e) {\r\n            System.out.printf(\"File %s not found.\\n\", importFileName);\r\n            return null;\r\n        }\r\n        catch (java.io.IOException e) {\r\n            System.out.printf(\"File %s not found.\\n\", importFileName);\r\n            return null;\r\n        }\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        //generatePhoneBook(\"Names.txt\", \"Addresses.txt\", \"Phone Numbers.txt\", \"PhoneBook.txt\");\r\n\r\n\r\n        try {\r\n\r\n            FileWriter exportFile = new FileWriter(\"PhoneBook2.txt\");\r\n            Scanner input = new Scanner(System.in);\r\n            int choice;\r\n\r\n            Vector<contact> phoneBook = loadPhoneBook(\"PhoneBook.txt\");\r\n\r\n            phoneBook.lastElement().display();\r\n\r\n            do {\r\n                System.out.print(\"Menu:\\n\\t1) Lookup Contact\\n\\t2) Insert New Contact\\n\\t3) Delete Contact\\n\\t4) Exit\");\r\n                choice = input.nextInt();\r\n                input.nextLine();\r\n\r\n\r\n                switch (choice) {\r\n                    case 1:\r\n                        break;\r\n                    case 2:\r\n                        break;\r\n                    case 3:\r\n                        break;\r\n                }\r\n\r\n\r\n            } while (choice != 4);\r\n\r\n\r\n\r\n\r\n        }\r\n        catch (java.io.IOException e) {\r\n            System.out.println(\"Exception: Unable to Open import file\");\r\n        }\r\n\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Source.java b/src/Source.java
+--- a/src/Source.java	(revision 6ae31aab0061580b5322c7e89279599a9fbeb3cb)
++++ b/src/Source.java	(date 1664587852393)
+@@ -1,5 +1,4 @@
+ import java.util.Scanner;
+-import java.util.Vector;
+ import java.io.*;
+ 
+ /**
+@@ -10,31 +9,12 @@
+         b) implement insert/delete element functions
+     4) Implement outer-loop for loading/generating phonebooks in program
+     OPTIONAL:
+-    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient search
+-    6) implement multithreading to loadPhoneBook method
+-
++    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient searching
++    6) implement multithreading to loadPhoneBook method because it looks cool
+  **/
+-
+ 
+ public class Source {
+-    //reads individual characters from a FileReader until it finds the newline character or the end of the file
+-    public static String getLine(FileReader in) {
+-        String line = "";
+-        char ch;
+-        try {
+-            ch = (char) in.read();
+-            while (ch != '\n' && in.ready()) {
+-                line += ch;
+-                ch = (char) in.read();
+-                //System.out.println(name.ready());
+-            }
+-            return line;
+-        }
+-        catch (java.io.IOException e) {
+-            System.out.println("File Reader IO Exception");
+-            return "";
+-        }
+-    }
++
+     public static void generatePhoneBook(String namesFile, String addressFile, String numbersFile, String outputFileName) {
+         try {
+             System.out.println("Importing names: " + namesFile);
+@@ -46,7 +26,6 @@
+             System.out.println("Generating output file: " + outputFileName);
+             FileWriter phoneBook = new FileWriter(outputFileName);
+ 
+-            char currentChar = (char)-1;
+             String line;
+             int i = 0;
+ 
+@@ -54,24 +33,22 @@
+                 //System.out.println((name.ready() && address.ready() && number.ready()));
+                 System.out.println("Contact: " + i++);
+                 //read next name
+-                line = getLine(name);
++                line = PhoneBook.getLine(name);
+                 phoneBook.write(line + "\n");
+                 System.out.println(line);
+ 
+                 //read next address
+-
+-                line = getLine(address);
++                line = PhoneBook.getLine(address);
+                 phoneBook.write(line + "\n");
+                 System.out.println(line);
+ 
+                 //read next second address line
+-                    line = getLine(address);
++                line = PhoneBook.getLine(address);
+                 phoneBook.write(line + "\n");
+                 System.out.println(line);
+ 
+-
+                 //read next phone number
+-                line = getLine(number);
++                line = PhoneBook.getLine(number);
+                 phoneBook.write(line + "\n");
+                 System.out.println(line);
+             }
+@@ -83,70 +60,43 @@
+         }
+         catch (java.io.FileNotFoundException e) {
+             System.out.println("One or more files do not exist");
+-            return;
+         }
+         catch (java.io.IOException e) {
+             System.out.println("Output file could not be generated, check to make sure it does not already exist");
+         }
+     }
+-
+-    public static Vector<contact> loadPhoneBook(String importFileName) {
+-        try {
+-            FileReader importFile = new FileReader(importFileName);
+-            String entryNumber = getLine(importFile);
+-            System.out.println(entryNumber);
+-            Vector<contact> phoneBook = new Vector(Integer.parseInt(entryNumber.trim()));
+-
+-            while(importFile.ready()) {
+-                phoneBook.add(new contact(getLine(importFile), (getLine(importFile)+getLine(importFile)), getLine(importFile)));
+-            }
+-            return phoneBook;
+-        }
+-        catch (java.io.FileNotFoundException e) {
+-            System.out.printf("File %s not found.\n", importFileName);
+-            return null;
+-        }
+-        catch (java.io.IOException e) {
+-            System.out.printf("File %s not found.\n", importFileName);
+-            return null;
+-        }
+-    }
+-
+     public static void main(String[] args) {
+         //generatePhoneBook("Names.txt", "Addresses.txt", "Phone Numbers.txt", "PhoneBook.txt");
+ 
+ 
+         try {
+-
+             FileWriter exportFile = new FileWriter("PhoneBook2.txt");
+             Scanner input = new Scanner(System.in);
+             int choice;
+ 
+-            Vector<contact> phoneBook = loadPhoneBook("PhoneBook.txt");
+-
+-            phoneBook.lastElement().display();
++            PhoneBook defaultBook = new PhoneBook("PhoneBook.txt");
+ 
+             do {
+-                System.out.print("Menu:\n\t1) Lookup Contact\n\t2) Insert New Contact\n\t3) Delete Contact\n\t4) Exit");
++                System.out.print("Menu:\n\t1) Lookup Contact\n\t2) Insert New Contact\n\t3) Delete Contact\n\t4) Exit\nInsert Option: ");
+                 choice = input.nextInt();
+                 input.nextLine();
+ 
+-
+                 switch (choice) {
+                     case 1:
++                        defaultBook.lookUpInterface(input);
+                         break;
+                     case 2:
+                         break;
+                     case 3:
++                        System.out.print("Insert index of contact: ");
++                        defaultBook.get(input.nextInt()).display();
++                        input.nextLine();
+                         break;
+                 }
+ 
+ 
+             } while (choice != 4);
+ 
+-
+-
+-
+         }
+         catch (java.io.IOException e) {
+             System.out.println("Exception: Unable to Open import file");
+Index: src/contact.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import org.w3c.dom.ls.LSOutput;\r\n\r\nimport java.io.FileWriter;\r\n\r\npublic class contact {\r\n    String name;\r\n    String address;\r\n    String number;\r\n\r\n\r\n    //constructors\r\n    public contact() {\r\n        name = null;\r\n        address = null;\r\n        number = null;\r\n    }\r\n    public contact(String na, String a, String nu) {\r\n        name = na;\r\n        address =a;\r\n        number =nu;\r\n    } //sets name address and number to specified values\r\n\r\n    //modifiers and accessors\r\n    public String getName() {return name;}\r\n    public String getAddress() {return address;}\r\n    public String getNumber() {return number;}\r\n\r\n    public void setName(String s) {name = s;}\r\n    public void setAddress(String s) {name = s;}\r\n    public void setNumber(String s) {name = s;}\r\n\r\n    public void display() {\r\n        System.out.printf(\"Contact Info:\\nName: %s\\nAddress: %s\\nPhone Number: %s\", name, address, number);\r\n    }\r\n    public void export (FileWriter output) {\r\n        try {\r\n            output.write(name);\r\n            output.write(address);\r\n            output.write(number);\r\n        }\r\n        catch (java.io.IOException e) {\r\n            System.out.println(\"Exception: Unable to access output file\");\r\n        }\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/contact.java b/src/contact.java
+--- a/src/contact.java	(revision 6ae31aab0061580b5322c7e89279599a9fbeb3cb)
++++ b/src/contact.java	(date 1664474040013)
+@@ -1,41 +1,56 @@
+-import org.w3c.dom.ls.LSOutput;
+-
+ import java.io.FileWriter;
+ 
+ public class contact {
+     String name;
+-    String address;
++    String addressLine1;
++    String addressLine2;
+     String number;
+ 
+ 
+     //constructors
+     public contact() {
+         name = null;
+-        address = null;
++        addressLine1 = null;
++        addressLine2 = null;
+         number = null;
+     }
+-    public contact(String na, String a, String nu) {
++    public contact(String na, String a1, String a2, String nu) {
+         name = na;
+-        address =a;
++        addressLine1 = a1;
++        addressLine2 = a2;
+         number =nu;
+     } //sets name address and number to specified values
+ 
+     //modifiers and accessors
+-    public String getName() {return name;}
+-    public String getAddress() {return address;}
+-    public String getNumber() {return number;}
++
++
++    public String getName() {
++        return name;
++    }
++    public String getAddressLine2() {
++        return addressLine2;
++    }
++    public String getAddressLine1() {
++        return addressLine1;
++    }
++    public String getNumber() {
++        return number;
++    }
+ 
+     public void setName(String s) {name = s;}
+-    public void setAddress(String s) {name = s;}
+-    public void setNumber(String s) {name = s;}
++    public void setAddressLine1(String s) {addressLine1 = s;}
++    public void setAddressLine2(String s) {addressLine2 = s;}
++    public void setNumber(String s) {number = s;}
+ 
+     public void display() {
+-        System.out.printf("Contact Info:\nName: %s\nAddress: %s\nPhone Number: %s", name, address, number);
++        System.out.printf("Contact Info:\nName:\t%s\nAddress:%s\n\t\t%s\nPhone Number:\t%s", name, addressLine1, addressLine2, number);
++        //System.out.println("help");
+     }
+     public void export (FileWriter output) {
+         try {
+             output.write(name);
+-            output.write(address);
++            output.write(addressLine1);
++            output.write(addressLine2);
+             output.write(number);
+         }
+         catch (java.io.IOException e) {
+Index: src/PhoneBook.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/PhoneBook.java b/src/PhoneBook.java
+new file mode 100644
+--- /dev/null	(date 1664588094606)
++++ b/src/PhoneBook.java	(date 1664588094606)
+@@ -0,0 +1,143 @@
++import java.io.FileNotFoundException;
++import java.io.FileReader;
++import java.io.IOException;
++import java.util.*;
++
++public class PhoneBook {
++    ArrayList<contact> ContactList;
++    int contactNumber;
++    final int resAmount = 5;
++
++
++    //Constructors:
++    PhoneBook() {
++        ContactList = new ArrayList<>(0);
++    } //default constructor is default
++    PhoneBook(String fileName) {
++        loadPhoneBook(fileName);
++    }
++    PhoneBook(int initialSize) {
++        contactNumber = initialSize;
++        ContactList = new ArrayList<>(initialSize);
++    } //initializes empty contact list of specified size, not sure why this is remotely useful
++
++    //static methods
++    public static String getLine(FileReader in) {
++        String line = "";
++        char ch;
++        try {
++            ch = (char) in.read();
++            while (ch != '\n' && in.ready()) {
++                line += ch;
++                ch = (char) in.read();
++                //System.out.println(name.ready());
++            }
++            return line;
++        }
++        catch (java.io.IOException e) {
++            System.out.println("File Reader IO Exception");
++            return "";
++        }
++    }
++    //public methods
++    public void loadPhoneBook(String importFileName) {
++        try {
++            FileReader importFile = new FileReader(importFileName);
++            contactNumber = Integer.parseInt(getLine(importFile).trim());
++            ContactList = new ArrayList(contactNumber);
++            while(importFile.ready()) {
++                ContactList.add(new contact(getLine(importFile), getLine(importFile), getLine(importFile), getLine(importFile)));
++            }
++        }
++        catch (FileNotFoundException e) {
++            System.out.printf("Input File: %s not found.\n", importFileName);
++        }
++
++        catch (IOException e) {
++            System.out.printf("Output File: %s not found.\n", importFileName);
++        }
++    }
++    //accessors
++    public contact get(int index) {
++        return ContactList.get(index);
++    }
++    public int getContactNumber() {
++        return contactNumber;
++    }
++    //modifiers
++    public void addContact(contact c) {
++        ContactList.add(c);
++    }
++
++    //search parameters
++    int[] lookUpName(String key) {
++        int index = 0;
++        int comparison, comparisonIndex;
++        int[] results = new int[resAmount];
++        int[] comparisons = new int [resAmount];
++
++        key = key.trim();
++        for (int i = 0; i < resAmount; i++) comparisons[i] = Integer.MAX_VALUE;
++
++        while (index < contactNumber) {
++            if (key.length() > ContactList.get(index).getName().length()) {
++                comparison = Math.abs(ContactList.get(index).getName().compareToIgnoreCase(key.substring(0, ContactList.get(index).getName().length())));
++            }
++            else {
++                comparison = Math.abs(ContactList.get(index).getName().substring(0, key.length()).compareToIgnoreCase(key));
++            }
++            //optimize algorithm to only sort when need to
++            if (comparison < comparisons[resAmount-1]) {
++                //System.out.println("Found new comparison at Index" + index);
++
++                comparisonIndex = resAmount-1;
++
++                while (comparison < comparisons[comparisonIndex] && comparisonIndex > 0) comparisonIndex--;
++
++                for (int i = resAmount-1; i > comparisonIndex; i--) {
++                    //System.out.println("\tShifting Index: " + i);
++                    comparisons[i] = comparisons[i-1];
++                    results[i] = results[i-1];
++                }
++                comparisons[comparisonIndex] = comparison;
++                results[comparisonIndex] = index;
++            }
++            index++;
++        }
++
++        for (int i = 0; i < resAmount; i++) {
++            System.out.println("Debug: ");
++            System.out.println( i + ": " + ContactList.get(results[i]).getName() + "Comparison Value: " + comparisons[i]);
++        }
++        return results;
++    }
++
++    contact lookUpAddress() {
++        return null;
++    }
++
++    contact lookUpNumber() {
++        return null;
++    }
++
++    public int lookUpInterface(Scanner in) {
++        int choice;
++        int[] results;
++
++        System.out.print("\tSearch Contact By:\n\t1) Name\n\t2) Address\n\t3) Phone Number\n\t4) Cancel\nInsert Option: ");
++
++        switch (in.nextInt()) {
++
++            case 1:
++                in.nextLine();
++                System.out.print("Enter Contact Name: ");
++                results = lookUpName(in.nextLine());
++/**
++                for (int i = 0; i < resAmount; i++) {
++                    System.out.printf("\t%d: %s\n", i, ContactList.get(results[i]).getName());
++                }
++ **/
++        }
++        return 0;
++    }
++}
