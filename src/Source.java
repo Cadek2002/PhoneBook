@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Vector;
 import java.io.*;
 
 /**
@@ -10,31 +9,12 @@ import java.io.*;
         b) implement insert/delete element functions
     4) Implement outer-loop for loading/generating phonebooks in program
     OPTIONAL:
-    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient search
-    6) implement multithreading to loadPhoneBook method
-
+    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient searching
+    6) implement multithreading to loadPhoneBook method because it looks cool
  **/
 
-
 public class Source {
-    //reads individual characters from a FileReader until it finds the newline character or the end of the file
-    public static String getLine(FileReader in) {
-        String line = "";
-        char ch;
-        try {
-            ch = (char) in.read();
-            while (ch != '\n' && in.ready()) {
-                line += ch;
-                ch = (char) in.read();
-                //System.out.println(name.ready());
-            }
-            return line;
-        }
-        catch (java.io.IOException e) {
-            System.out.println("File Reader IO Exception");
-            return "";
-        }
-    }
+
     public static void generatePhoneBook(String namesFile, String addressFile, String numbersFile, String outputFileName) {
         try {
             System.out.println("Importing names: " + namesFile);
@@ -46,7 +26,6 @@ public class Source {
             System.out.println("Generating output file: " + outputFileName);
             FileWriter phoneBook = new FileWriter(outputFileName);
 
-            char currentChar = (char)-1;
             String line;
             int i = 0;
 
@@ -54,24 +33,22 @@ public class Source {
                 //System.out.println((name.ready() && address.ready() && number.ready()));
                 System.out.println("Contact: " + i++);
                 //read next name
-                line = getLine(name);
+                line = PhoneBook.getLine(name);
                 phoneBook.write(line + "\n");
                 System.out.println(line);
 
                 //read next address
-
-                line = getLine(address);
+                line = PhoneBook.getLine(address);
                 phoneBook.write(line + "\n");
                 System.out.println(line);
 
                 //read next second address line
-                    line = getLine(address);
+                line = PhoneBook.getLine(address);
                 phoneBook.write(line + "\n");
                 System.out.println(line);
 
-
                 //read next phone number
-                line = getLine(number);
+                line = PhoneBook.getLine(number);
                 phoneBook.write(line + "\n");
                 System.out.println(line);
             }
@@ -83,69 +60,43 @@ public class Source {
         }
         catch (java.io.FileNotFoundException e) {
             System.out.println("One or more files do not exist");
-            return;
         }
         catch (java.io.IOException e) {
             System.out.println("Output file could not be generated, check to make sure it does not already exist");
         }
     }
-
-    public static Vector<contact> loadPhoneBook(String importFileName) {
-        try {
-            FileReader importFile = new FileReader(importFileName);
-            String entryNumber = getLine(importFile);
-            System.out.println(entryNumber);
-            Vector<contact> phoneBook = new Vector(Integer.parseInt(entryNumber.trim()));
-
-            while(importFile.ready()) {
-                phoneBook.add(new contact(getLine(importFile), (getLine(importFile)+getLine(importFile)), getLine(importFile)));
-            }
-            return phoneBook;
-        }
-        catch (java.io.FileNotFoundException e) {
-            System.out.printf("File %s not found.\n", importFileName);
-            return null;
-        }
-        catch (java.io.IOException e) {
-            System.out.printf("File %s not found.\n", importFileName);
-            return null;
-        }
-    }
-
     public static void main(String[] args) {
         //generatePhoneBook("Names.txt", "Addresses.txt", "Phone Numbers.txt", "PhoneBook.txt");
 
 
         try {
-
             FileWriter exportFile = new FileWriter("PhoneBook2.txt");
             Scanner input = new Scanner(System.in);
             int choice;
 
-            Vector<contact> phoneBook = loadPhoneBook("PhoneBook.txt");
 
-            phoneBook.lastElement().display();
+            PhoneBook defaultBook = new PhoneBook("PhoneBook.txt");
 
             do {
-                System.out.print("Menu:\n\t1) Lookup Contact\n\t2) Insert New Contact\n\t3) Delete Contact\n\t4) Exit");
+                System.out.print("Menu:\n\t1) Lookup Contact\n\t2) Insert New Contact\n\t3) Delete Contact\n\t4) Exit\nInsert Option: ");
                 choice = input.nextInt();
                 input.nextLine();
 
-
                 switch (choice) {
                     case 1:
+                        defaultBook.lookUpInterface(input);
                         break;
                     case 2:
                         break;
                     case 3:
+                        System.out.print("Insert index of contact: ");
+                        defaultBook.get(input.nextInt()).display();
+                        input.nextLine();
                         break;
                 }
 
 
             } while (choice != 4);
-
-
-
 
         }
         catch (java.io.IOException e) {
