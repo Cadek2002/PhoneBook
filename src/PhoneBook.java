@@ -111,6 +111,33 @@ public class PhoneBook {
         double boostedScore = score + prefixMatch * 0.1 * (1.0 - score);
         return boostedScore;
     }
+    //protected int input statements
+    public static int getIntProtected() {
+        Scanner in = new Scanner(System.in);
+        try {
+            return in.nextInt();
+        }
+        catch (InputMismatchException e) {
+            System.out.println("Invalid Input");
+        }
+        return -1;
+    }
+    public static int getIntProtected(int l, int h) {
+
+        Scanner in = new Scanner(System.in);
+        int c;
+        try {
+            c = in.nextInt();
+            in.nextLine();
+            if ( l > c || h < c)
+                throw new InputMismatchException("Out of Expected Range");
+            return c;
+        }
+        catch (InputMismatchException e) {
+            System.out.println(e);
+        }
+        return -1;
+    }
 
     //public methods
     public void loadPhoneBook(String importFileName) {
@@ -131,69 +158,68 @@ public class PhoneBook {
         }
     }
     //accessors
-    public contact get(int index) {
+    public contact  get(int index) {
         return ContactList.get(index);
     }
-    public String getName(int index) {
+    public String   getName(int index) {
+        //System.out.println("Debug Name: " + get(index).getName());
         return get(index).getName();
     }
-    public String getNumber(int index) {
+    public String   getNumber(int index) {
         return get(index).getNumber();
     }
-    public String getAddress(int index) {
+    public String   getAddress(int index) {
         return get(index).getAddressLine1() + "\n" + get(index).getAddressLine2();
     }
-
-
-    public int getContactNumber() {
+    public int      getBookSize() {
         return contactNumber;
     }
     //modifiers
-    public void addContact(contact c) {
+    public void     addContact(contact c) {
         ContactList.add(c);
     }
 
     //search parameters
     int[] lookUpName(String key) {
-        int index = 0;
-        int comparisonIndex;
-        float comparison;
-        int[] results = new int[resAmount];
-        float[] comparisons = new float [resAmount];
-        String log;
+        int index = 0;                                  //main loop iterative variable
+        int comparisonIndex;                            //minor loop iterative variable
+        float comparison;                               //value of current the current index's names' comparison value
+        int[] results = new int[resAmount];             //tracks the ContactLists index of the top names
+        float[] comparisons = new float [resAmount];    //tracks the Comparison values for the top names
 
-        key = key.trim();
-        for (int i = 0; i < resAmount; i++) comparisons[i] = Integer.MAX_VALUE;
+        key = key.trim(); //prepare key for comparison
 
         while (index < contactNumber) {
 
             //sets comparison to the string similarity algorithim, trimming off the excess length of either the key or the current name depending on which is longer
             comparison = (float)(ContactList.get(index).getName().length() > key.length() ? JaroWrinklerScore(key, getName(index).substring(0, key.length())) : JaroWrinklerScore(key.substring(0, getName(index).length()), getName(index)));
 
-            //optimize algorithm to only sort when need to
-            if (comparison < comparisons[resAmount-1]) {
-                //System.out.println("Found new comparison at Index" + index);
-                comparisonIndex = resAmount-1;
+            //if the current comparison is better than the worst result in the list find its spot and kick the worst result out
+            if (comparison > comparisons[resAmount-1]) {
+                comparisonIndex = 0;
+                //loop through the current top results starting from the top and move down the list until a result has a lower comparison rating
+                while (comparison < comparisons[comparisonIndex] && comparisonIndex < resAmount-1) comparisonIndex++;
 
-                while (comparison < comparisons[comparisonIndex] && comparisonIndex > 0) comparisonIndex--;
-
+                //shift all the lower similarity results down one space to make room for the new results
                 for (int i = resAmount-1; i > comparisonIndex; i--) {
-                    //System.out.println("\tShifting Index: " + i);
                     comparisons[i] = comparisons[i-1];
                     results[i] = results[i-1];
                 }
+                //insert the result (and track its index in the ArrayList)
                 comparisons[comparisonIndex] = comparison;
                 results[comparisonIndex] = index;
             }
             index++;
         }
+        //debug printing
+        /*
+        System.out.println("Debug Comparisons: ");
         for (int i = 0; i < resAmount; i++) {
-            //log = String.valueOf(i) + ": " + ContactList.get(results[i]).getName());
-            System.out.printf("%d %s %f \n", i, getName(results[i]), 234.234);
+            System.out.printf("%d: %s %f\n", i, getName(results[i]).trim(), comparisons[i]);
         }
+        */
         return results;
     }
-
     contact lookUpAddress() {
         return null;
     }
@@ -203,21 +229,37 @@ public class PhoneBook {
     public int lookUpInterface(Scanner in) {
         int choice;
         int[] results;
-
         System.out.print("\tSearch Contact By:\n\t1) Name\n\t2) Address\n\t3) Phone Number\n\t4) Cancel\nInsert Option: ");
 
         switch (in.nextInt()) {
-
-            case 1:
+            case 1 -> {
+                choice = -1;
                 in.nextLine();
                 System.out.print("Enter Contact Name: ");
                 results = lookUpName(in.nextLine());
-/**
+
+                System.out.println("Search Results: ");
                 for (int i = 0; i < resAmount; i++) {
-                    System.out.printf("\t%d: %s\n", i, ContactList.get(results[i]).getName());
+                    System.out.printf("\t%d: %s\n", i+1, getName(results[i]).trim());
                 }
- **/
+                do {
+                    System.out.printf("Enter The index of the desired result (1-%d): \n", resAmount);
+                    choice = getIntProtected(0, resAmount);
+                } while (choice == -1);
+
+                get(results[choice-1]).display();
+            }
+            case 2 -> {
+
+            }
+            case 3 -> {
+                choice = -1;
+                in.nextLine();
+                System.out.print("Enter Contact Number (No dashes): ");
+
+            }
         }
         return 0;
+
     }
 }

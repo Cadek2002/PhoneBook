@@ -3,13 +3,15 @@ import java.io.*;
 
 /**
  Todo:
-    1) Add 2nd Address line field to contact and update loadPhoneBook to account for this
+    1) Implement Address class to contact class to better search through addresses
     2) implement basic lookup function based on linear search for each field
+        b) address lookup
+        c) phone number lookup
     3) implement file updating
         b) implement insert/delete element functions
     4) Implement outer-loop for loading/generating phonebooks in program
     OPTIONAL:
-    5) add 3 sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient searching
+    5) add sets of binary/AVL trees (with each field of contacts acting as the key) for more efficient searching
     6) implement multithreading to loadPhoneBook method because it looks cool
  **/
 
@@ -67,14 +69,10 @@ public class Source {
     }
     public static void main(String[] args) {
         //generatePhoneBook("Names.txt", "Addresses.txt", "Phone Numbers.txt", "PhoneBook.txt");
-
-
         try {
             FileWriter exportFile = new FileWriter("PhoneBook2.txt");
             Scanner input = new Scanner(System.in);
             int choice;
-
-
             PhoneBook defaultBook = new PhoneBook("PhoneBook.txt");
 
             do {
@@ -105,4 +103,5 @@ public class Source {
 
 
     }
+
 }

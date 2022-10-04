@@ -1,11 +1,18 @@
 import java.io.FileWriter;
 
 public class contact {
+
+    private class address {
+        address (String l1, String L2) {
+
+        }
+
+
+    }
     String name;
     String addressLine1;
     String addressLine2;
     String number;
-
 
     //constructors
     public contact() {
@@ -43,7 +50,7 @@ public class contact {
     public void setNumber(String s) {number = s;}
 
     public void display() {
-        System.out.printf("Contact Info:\nName:\t%s\nAddress:%s\n\t\t%s\nPhone Number:\t%s", name, addressLine1, addressLine2, number);
+        System.out.printf("Contact Info:\nName:\t\t%s\nAddress:\t%s\n\t\t\t%s\nNumber:\t\t%s\n", name.trim(), addressLine1.trim(), addressLine2.trim(), number.trim());
         //System.out.println("help");
     }
     public void export (FileWriter output) {
