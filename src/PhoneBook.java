@@ -1,5 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -20,7 +22,6 @@ public class PhoneBook {
         contactNumber = initialSize;
         ContactList = new ArrayList<>(initialSize);
     } //initializes empty contact list of specified size, not sure why this is remotely useful
-
     //static methods
     public static String getLine(FileReader in) {
         String line = "";
@@ -157,6 +158,26 @@ public class PhoneBook {
             System.out.printf("Output File: %s not found.\n", importFileName);
         }
     }
+
+    public boolean exportPhoneBook(String exportFileName) {
+        try {
+            File oldFile = new File (exportFileName);
+            oldFile.delete();
+            FileWriter out = new FileWriter(exportFileName);
+            out.write(contactNumber + "\n");
+            for (int i = 0; i < contactNumber; i++) {
+                out.write(getName(i).trim() + "\n");
+                out.write(getAddress(i).stringRep() + "\n");
+                out.write(getName(i).trim() + "\n");
+            }
+            out.close();
+
+            return true;
+        }
+        catch (java.io.IOException e) {
+            return false;
+        }
+    }
     //accessors
     public contact  get(int index) {
         return ContactList.get(index);
@@ -168,8 +189,8 @@ public class PhoneBook {
     public String   getNumber(int index) {
         return get(index).getNumber();
     }
-    public String   getAddress(int index) {
-        return get(index).getAddressLine1() + "\n" + get(index).getAddressLine2();
+    public contact.Address getAddress(int index) {
+        return get(index).getAddress();
     }
     public int      getBookSize() {
         return contactNumber;
@@ -191,7 +212,7 @@ public class PhoneBook {
 
         while (index < contactNumber) {
 
-            //sets comparison to the string similarity algorithim, trimming off the excess length of either the key or the current name depending on which is longer
+            //sets comparison to the string similarity algorithm, trimming off the excess length of either the key or the current name depending on which is longer
             comparison = (float)(ContactList.get(index).getName().length() > key.length() ? JaroWrinklerScore(key, getName(index).substring(0, key.length())) : JaroWrinklerScore(key.substring(0, getName(index).length()), getName(index)));
 
             //if the current comparison is better than the worst result in the list find its spot and kick the worst result out
