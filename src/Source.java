@@ -18,6 +18,9 @@ import java.io.*;
 public class Source {
 
     public static void main(String[] args) {
+
+        //PhoneBook.generatePhoneBook("LNames.txt", "LAddresses.txt", "LPhone Numbers.txt", "LPhoneBook.txt");
+
         Scanner input = new Scanner(System.in);
         int choice;
         PhoneBook defaultBook = new PhoneBook("PhoneBook.txt");
@@ -32,6 +35,7 @@ public class Source {
                     defaultBook.lookUpInterface(input);
                     break;
                 case 2:
+
                     break;
                 case 3:
                     System.out.print("Insert index of contact: ");
@@ -42,9 +46,8 @@ public class Source {
 
 
         } while (choice != 4);
-        System.out.println("Would you like to save your changes? (y/n): ");
-        choice = PhoneBook.getIntProtected();
-        if (choice == 'y' && defaultBook.exportPhoneBook("PhoneBook.txt")) {
+        System.out.print("Would you like to save your changes? (y/n): ");
+        if (input.nextLine().charAt(0) == 'y' && defaultBook.exportPhoneBook("PhoneBook.txt")) {
             System.out.println("Exported Phonebook.txt");
         }
     }

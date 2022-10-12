@@ -1,28 +1,61 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class PhoneBook {
     ArrayList<contact> ContactList;
+    HashMap<String, Integer> phoneNumberLookupTable;
+
     int contactNumber;
     final int resAmount = 5;
-
 
     //Constructors:
     PhoneBook() {
         ContactList = new ArrayList<>(0);
-    } //default constructor is default
+    }           //default constructor is default
     PhoneBook(String fileName) {
         loadPhoneBook(fileName);
-    }
+    }     //the only constructor that should get used
     PhoneBook(int initialSize) {
         contactNumber = initialSize;
         ContactList = new ArrayList<>(initialSize);
-    } //initializes empty contact list of specified size, not sure why this is remotely useful
+        phoneNumberLookupTable = new HashMap((int)(initialSize * 1.75));
+    }                            //initializes empty contact list of specified size when user is creating a new phone book from scratch
+
     //static methods
+    public static void generatePhoneBook(String names, String addresses, String numbers, String outputFileName) {
+        int n = 0;  //tracker for number of contacts
+        try {
+            FileReader name = new FileReader(names);        //name file
+            FileReader address = new FileReader(addresses); //address file
+            FileReader number = new FileReader(numbers);    //number file
+            RandomAccessFile phoneBook = new RandomAccessFile(outputFileName, "rw");    //open file (read/write)
+
+            //leave space for contact count at the beginning of file
+            phoneBook.write(("          \n".getBytes()));
+
+            //write name, address, and number to phonebook until one of the files runs out of lines, keep track of how many times this has happened
+            while (name.ready() && address.ready() && number.ready()) {
+                phoneBook.write((getLine(name) + "\n").getBytes());
+                phoneBook.write((getLine(address) + "\n").getBytes());
+                phoneBook.write((getLine(address) + "\n").getBytes());
+                phoneBook.write((getLine(number) + "\n").getBytes());
+                n++;
+            }
+
+            //go back to the beginning and add the contact number to the top
+            phoneBook.seek(0);
+            phoneBook.write(String.valueOf(n).getBytes());
+
+            //close everything
+            name.close();
+            address.close();
+            number.close();
+            phoneBook.close();
+        }
+        catch (IOException e) {
+            System.out.println("IO Error: " + e);
+        }
+    } //Merges separate input files for name, address, and number and merges them into one file
     public static String getLine(FileReader in) {
         String line = "";
         char ch;
@@ -39,8 +72,7 @@ public class PhoneBook {
             System.out.println("File Reader IO Exception");
             return "";
         }
-    }
-    //NOT my code, added for testing before my final code is written
+    } //returns a line from a FileReader
     public static double JaroWrinklerScore(final String s1, final String s2) {
 
         /**
@@ -111,7 +143,8 @@ public class PhoneBook {
         // we already have a good match, hence we boost the score proportional to the common prefix
         double boostedScore = score + prefixMatch * 0.1 * (1.0 - score);
         return boostedScore;
-    }
+    } //NOT my code, added for testing before my final algo is written
+
     //protected int input statements
     public static int getIntProtected() {
         Scanner in = new Scanner(System.in);
@@ -143,22 +176,29 @@ public class PhoneBook {
     //public methods
     public void loadPhoneBook(String importFileName) {
         try {
+            int n = 0;
             FileReader importFile = new FileReader(importFileName);
             contactNumber = Integer.parseInt(getLine(importFile).trim());
             ContactList = new ArrayList(contactNumber);
+            //declare the hash map to 1.75 x the number of contacts in the phone book
+            phoneNumberLookupTable = new HashMap<>((int)(contactNumber * 1.75));
+
+            //pass increments of 4 lines into the contact constructor and add that to the contact list
             while(importFile.ready()) {
-                ContactList.add(new contact(getLine(importFile), getLine(importFile), getLine(importFile), getLine(importFile)));
+                ContactList.add(new contact(getLine(importFile).trim(), getLine(importFile), getLine(importFile), getLine(importFile)));
+                phoneNumberLookupTable.put(ContactList.get(n).rawNumber, n);
+                n++;
             }
+            //update n just in case the value at the top of the file is incorrect
+            contactNumber = n;
         }
         catch (FileNotFoundException e) {
             System.out.printf("Input File: %s not found.\n", importFileName);
         }
-
         catch (IOException e) {
             System.out.printf("Output File: %s not found.\n", importFileName);
         }
     }
-
     public boolean exportPhoneBook(String exportFileName) {
         try {
             File oldFile = new File (exportFileName);
@@ -168,7 +208,7 @@ public class PhoneBook {
             for (int i = 0; i < contactNumber; i++) {
                 out.write(getName(i).trim() + "\n");
                 out.write(getAddress(i).stringRep() + "\n");
-                out.write(getName(i).trim() + "\n");
+                out.write(getNumber(i).trim() + "\n");
             }
             out.close();
 
@@ -178,23 +218,25 @@ public class PhoneBook {
             return false;
         }
     }
+
     //accessors
-    public contact  get(int index) {
+    public contact          get(int index) {
         return ContactList.get(index);
     }
-    public String   getName(int index) {
+    public String           getName(int index) {
         //System.out.println("Debug Name: " + get(index).getName());
         return get(index).getName();
     }
-    public String   getNumber(int index) {
+    public String           getNumber(int index) {
         return get(index).getNumber();
     }
-    public contact.Address getAddress(int index) {
+    public contact.Address  getAddress(int index) {
         return get(index).getAddress();
     }
-    public int      getBookSize() {
+    public int              getBookSize() {
         return contactNumber;
     }
+
     //modifiers
     public void     addContact(contact c) {
         ContactList.add(c);
@@ -244,11 +286,15 @@ public class PhoneBook {
     contact lookUpAddress() {
         return null;
     }
-    contact lookUpNumber() {
-        return null;
+    contact lookUpNumber(String key) {
+        //return the contact at the index specified by the hashmap when inserting the key
+        return ContactList.get(phoneNumberLookupTable.get(key));
     }
+
     public int lookUpInterface(Scanner in) {
         int choice;
+        String userInput;
+        String processedInput = "";
         int[] results;
         System.out.print("\tSearch Contact By:\n\t1) Name\n\t2) Address\n\t3) Phone Number\n\t4) Cancel\nInsert Option: ");
 
@@ -256,15 +302,15 @@ public class PhoneBook {
             case 1 -> {
                 choice = -1;
                 in.nextLine();
-                System.out.print("Enter Contact Name: ");
+                System.out.print("\tEnter Contact Name: ");
                 results = lookUpName(in.nextLine());
 
-                System.out.println("Search Results: ");
+                System.out.println("\tSearch Results: ");
                 for (int i = 0; i < resAmount; i++) {
-                    System.out.printf("\t%d: %s\n", i+1, getName(results[i]).trim());
+                    System.out.printf("\t\t%d: %s\n", i+1, getName(results[i]).trim());
                 }
                 do {
-                    System.out.printf("Enter The index of the desired result (1-%d): \n", resAmount);
+                    System.out.printf("\t\tEnter The index of the desired result (1-%d): ", resAmount);
                     choice = getIntProtected(0, resAmount);
                 } while (choice == -1);
 
@@ -276,10 +322,18 @@ public class PhoneBook {
             case 3 -> {
                 choice = -1;
                 in.nextLine();
-                System.out.print("Enter Contact Number (No dashes): ");
+                System.out.print("Enter Contact Number: ");
+                userInput = in.nextLine();
 
+                for (int i = userInput.length()-1; i >=0; i--) {
+                    if (Character.isDigit(userInput.charAt(i))) {
+                        processedInput += userInput.charAt(i);
+                    }
+                }
+                lookUpNumber(processedInput).display();
             }
         }
+
         return 0;
 
     }

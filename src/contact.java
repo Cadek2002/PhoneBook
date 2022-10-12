@@ -34,18 +34,19 @@ public class contact {
             while (Character.isDigit(l1.charAt(currentIndex++)));
             //set the street address to this number, the suffix incrementer skips over the space
             streetNumber = Integer.valueOf(l1.substring(0, currentIndex-1));
-            savedIndex = ++currentIndex;
+            savedIndex = currentIndex++;
             //find the start of the room number (designated by a '(' character) OR the end of the line
             while (currentIndex < l1.length() && l1.charAt(currentIndex) != '(') currentIndex++;
+            streetName = line1.substring(savedIndex, currentIndex);
             //if there is a room number, set the corresponding variable to the remaining data in the string, ignoring the last character as it should be a ')'
-            roomNumber = (currentIndex < l1.length() ? l1.substring(currentIndex, l1.length()-1):null);
+            roomNumber = (currentIndex < l1.length() ? l1.substring(currentIndex, l1.length()):null);
             //reset index to read next line
             currentIndex = 0;
             //read line 2 to comma (indicating end of city token) and set variable accordingly
-            while (l2.charAt(currentIndex) != ',' & currentIndex++ < l2.length());
+            while (l2.charAt(currentIndex) != ',' && currentIndex < l2.length()) currentIndex++;
             city = l2.substring(0, currentIndex);
             //skip over the ', ' characters and save start of state string;
-            currentIndex +=2 ;
+            currentIndex+= 2;
 
             //Since state will always be 2-characters, we don't need to loop through the rest of the string to find the start/end of tokens
             state = l2.substring(currentIndex, currentIndex+2);
@@ -57,27 +58,28 @@ public class contact {
         }
 
         public void debugDisplay() {
-            System.out.printf("Street address: %d %s %s\nCity: %s\nState: %s\nZip: %d", streetNumber, streetName, roomNumber, city, state, zip);
+            System.out.printf("Street address: %d %s %s\nCity: %s\nState: %s\nZip: %d\n", streetNumber, streetName, roomNumber, city, state, zip);
         }
 
     }
     String name;
     String number;
+    String rawNumber;
     Address address;
 
     //constructors
     public contact() {
         name = null;
-
         address = null;
         number = null;
+        rawNumber = null;
     }
     public contact(String na, String a1, String a2, String nu) {
-        name =      na;
+        setName(na);
         address =   new Address(a1, a2);
-        number =    nu;
+        setNumber(nu);
 
-        address.debugDisplay();
+        //address.debugDisplay();
     } //sets name address and number to specified values
 
     //modifiers and accessors
@@ -92,13 +94,24 @@ public class contact {
     public String getNumber() {
         return number;
     }
-    public String addressString() {
+    public String getRawNumber() {
+        return rawNumber;
+    }
+    public String getAddressString() {
         return address.stringRep();
     }
 
     public void setName(String s) {name = s;}
-    public void setNumber(String s) {number = s;}
-
+    public void setNumber(String s) {
+        number = s;
+        rawNumber = "";
+        int digit = 0;
+        for (int i = s.length()-1; i >=0; i--) {
+            if (Character.isDigit(s.charAt(i))) {
+                rawNumber += s.charAt(i);
+            }
+        }
+    }
     public void display() {
         System.out.printf("Contact Info:\nName:\t\t%s\nAddress:\t%s\n\t\t\t%s\nNumber:\t\t%s\n", name.trim(), address.line1.trim(), address.line2.trim(), number.trim());
         //System.out.println("help");
