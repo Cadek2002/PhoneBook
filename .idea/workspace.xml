@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d0de2074-8f56-40f2-9f6f-9a9e0d874b83" name="Changes" comment="Done">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_3_2022_5_18_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_10_3_2022_5_18_PM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhoneBook/PhoneBook.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhoneBook/PhoneBook.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PhoneBook.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PhoneBook.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhoneBook/Source.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhoneBook/Source.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhoneBook/contact.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhoneBook/contact.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PhoneBook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PhoneBook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Source.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Source.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contact.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/contact.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,21 +64,7 @@
       <option name="project" value="LOCAL" />
       <updated>1664898834136</updated>
     </task>
-    <task id="LOCAL-00002" summary="Done">
-      <created>1664912108190</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1664912108190</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Done">
-      <created>1664912154916</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1664912154916</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,6 +96,10 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Done" />
     <option name="LAST_COMMIT_MESSAGE" value="Done" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhoneBook$Source.ic" NAME="Source Coverage Results" MODIFIED="1664568445111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
