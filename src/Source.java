@@ -35,7 +35,7 @@ public class Source {
                     defaultBook.lookUpInterface(input);
                     break;
                 case 2:
-
+                    defaultBook.addContact(new contact(input));
                     break;
                 case 3:
                     System.out.print("Insert index of contact: ");

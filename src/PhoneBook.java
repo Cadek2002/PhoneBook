@@ -240,6 +240,7 @@ public class PhoneBook {
     //modifiers
     public void     addContact(contact c) {
         ContactList.add(c);
+        phoneNumberLookupTable.put(c.getRawNumber(), contactNumber++);
     }
 
     //search parameters
